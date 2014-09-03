@@ -81,17 +81,17 @@ lab%-handin.tar.gz: clean
 prepare-submit: lab1-handin.tar.gz
 
 .PHONY: prepare-submit-a
-prepare-submit: lab1a-handin.tar.gz
+prepare-submit-a: lab1a-handin.tar.gz
 
 .PHONY: prepare-submit-b
-prepare-submit: lab1b-handin.tar.gz
+prepare-submit-b: lab1b-handin.tar.gz
 
 .PHONY: submit-a
-submit: lab1a-handin.tar.gz
+submit-a: lab1a-handin.tar.gz
 	./submit.py $<
 
 .PHONY: submit-b
-submit: lab1b-handin.tar.gz
+submit-b: lab1b-handin.tar.gz
 	./submit.py $<
 
 .PHONY: submit

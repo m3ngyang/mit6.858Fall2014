@@ -46,17 +46,20 @@ check-bugs:
 
 .PHONY: check-crash
 check-crash: bin.tar.gz exploit-2a.py exploit-2b.py shellcode.bin
+	./check-bin.sh
 	tar xf bin.tar.gz
 	./check-part2.sh zook-exstack.conf ./exploit-2a.py
 	./check-part2.sh zook-exstack.conf ./exploit-2b.py
 
 .PHONY: check-exstack
 check-exstack: bin.tar.gz exploit-3.py shellcode.bin
+	./check-bin.sh
 	tar xf bin.tar.gz
 	./check-part3.sh zook-exstack.conf ./exploit-3.py
 
 .PHONY: check-libc
 check-libc: bin.tar.gz exploit-4a.py exploit-4b.py shellcode.bin
+	./check-bin.sh
 	tar xf bin.tar.gz
 	./check-part3.sh zook-nxstack.conf ./exploit-4a.py
 	./check-part3.sh zook-nxstack.conf ./exploit-4b.py

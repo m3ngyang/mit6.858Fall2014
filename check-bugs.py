@@ -48,7 +48,7 @@ def stat_summary(ans):
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        print("usage: %s [bugs.txt]", sys.argv[1])
+        print("usage: %s [bugs.txt]", sys.argv[0])
         exit(1)
     
     ans = parse(sys.argv[1])

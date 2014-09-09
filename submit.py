@@ -1,55 +1,39 @@
 #!/usr/bin/python
-import os
+import os.path
+import subprocess
 import sys
-import base64
-import json
-import urllib,urllib2
+import urllib
 
-TOKEN_FILE = 'submit.token'
-SUBMIT_URL = 'https://6858submit.csail.mit.edu/capi/submit'
+KEY_FILE = "submit.token"
 
-def submit(filename):
+def main(filename):
+    # Prompt for key if missing
+    if not os.path.exists(KEY_FILE):
+        print "Please visit http://css.csail.mit.edu/6.858/2014/labs/handin.html"
+        print "and enter your API key."
+        key = raw_input("Key: ").strip()
+        with open(KEY_FILE, "w") as f:
+            f.write(key + "\n")
+        print "API key written to %s" % KEY_FILE
 
-    if not os.path.exists(TOKEN_FILE):
-        print "Please get a valid token from the submission website and enter it here"
-        token = raw_input("token: ").strip()
-        with open(TOKEN_FILE,'w') as f:
-            f.write(token);
+    # Read the key.
+    with open(KEY_FILE) as f:
+        key = f.read().strip()
 
-    with open(TOKEN_FILE) as f:
-        token = f.read()
+    # Shell out to curl. urllib2 doesn't deal with multipart attachments. Throw
+    # away the output; you just get a random HTML page.
+    with open("/dev/null", "a") as null:
+        subprocess.check_call(["curl", "-f",
+                               "-F", "file=@%s" % filename,
+                               "-F", "key=%s" % key,
+                               "http://6858.scripts.mit.edu/submit/handin.py/upload"],
+                              stdout=null, stderr=null)
+    print "Submitted %s." % filename
+    print "Please visit http://css.csail.mit.edu/6.858/2014/labs/handin.html"
+    print "to verify the upload."
 
-    doc = prepare_data(filename,token)
-
-    print "using token: {0}".format(token)
-
-    try:
-        urllib2.urlopen(SUBMIT_URL,json.dumps(doc))
-        print 'File {0} submitted'.format(filename)
-        print 'please visit the submission website to verify your submission.'
-    except urllib2.HTTPError as e:
-        print "Error submitting file: {0}".format(e)
-        print "Maybe your API token has changed or the file is not a tarball?"
-        print "Please delete the file 'submit.token' and try again."
-
-
-
-def prepare_data(filename,token):
-
-    with open(filename) as f:
-        filedata = f.read()
-
-    doc = {
-        'filename':filename,
-        'api-token':token,
-        'data': base64.b64encode(filedata),
-    }
-
-    return doc
-
-
-if __name__ == '__main__':
-    if len(sys.argv) != 2:
-        print "Usage {0} labx-handin.tar.gz".format(sys.argv[0])
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print "Usage: %s TARBALL" % sys.argv[0]
         sys.exit(1)
-    submit(sys.argv[1])
+    main(sys.argv[1])

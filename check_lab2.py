@@ -170,7 +170,7 @@ def check_exec(svc, allowed):
     config.readfp(data)
 
     if not config.has_section(svc):
-        log(red("FAIL"), "Exercise 4:", "%s missing from zook.conf")
+        log(red("FAIL"), "Exercise 4:", "%s missing from zook.conf" % svc)
         return False
     if not config.has_option(svc, "args"):
         log(red("FAIL"), "Exercise 4:", "%s has no args in zook.conf" % svc)
@@ -178,7 +178,7 @@ def check_exec(svc, allowed):
     try:
         uid, gid = map(int, config.get(svc, "args").split())
     except:
-        log(red("FAIL"), "Exercise 4:", "%s has ill-formatted args in zook.conf")
+        log(red("FAIL"), "Exercise 4:", "%s has ill-formatted args in zook.conf" % svc)
         return False
     if uid < 0 or gid < 0:
         log(red("FAIL"), "Exercise 4:", "args should have non-negative uid and gid")

@@ -21,6 +21,11 @@ setup:
 	./chroot-setup.sh
 
 
+
+.PHONY: fix-flask
+fix-flask: fix-flask.sh
+	./fix-flask.sh
+
 .PHONY: clean
 clean:
 	rm -f *.o *.pyc *.bin $(PROGS)

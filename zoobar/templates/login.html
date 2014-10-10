@@ -2,7 +2,7 @@
 {% block title %}Login{% endblock %}
 {% block main %}
 <div id="login" class="centerpiece">
-<form name="loginform" method="POST">
+<form name="loginform" method="POST" action="{{ url_for('login') }}">
 <table>
 <tr>
    <td>Username:</td>

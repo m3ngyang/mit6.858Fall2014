@@ -54,7 +54,17 @@ int main(int argc, char **argv)
         int cltfd = accept(sockfd, NULL, NULL);
         if (cltfd < 0)
             err(1, "accept");
-        process_client(cltfd);
+        switch (fork())
+        {
+        case -1: /* error */
+            err(1, "fork");
+        case 0:  /* child */
+            process_client(cltfd);
+            return 0;
+        default: /* parent */
+            close(cltfd);
+            break;
+        }
     }
 }
 

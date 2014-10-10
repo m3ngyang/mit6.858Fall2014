@@ -29,16 +29,20 @@
 {% block postscript %}
 {% if transfers %}
 <table class="log" align="center">
+<thead>
 <tr><th>Time</th>
     <th>Sender</th>
     <th>Recipient</th>
     <th>Amount</th></tr>
+</thead>
+<tbody>
 {% for transfer in transfers %}
 <tr><td align="center">{{ transfer.time }}</td>
     <td align="center">{{ transfer.sender }}</td>
     <td align="center">{{ transfer.recipient }}</td>
     <td align="center">{{ transfer.amount }}</td></tr>
 {% endfor %}
+</tbody>
 </table>
 {% endif %}
 {% endblock %}

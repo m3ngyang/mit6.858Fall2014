@@ -15,3 +15,50 @@ another description.
     <paste offending line(s) of code here>
 
 # many more come here
+[zookd.c:65]
+the 'repath' variable can be overwritten by the 'env' variable because 'repath' may be short than 'env' variable
+
+[http.c:165]
+the 'envvar' variable can be overwritten by the 'buf' variable because sprintf is unsafe.
+code:
+    static char buf[8192];      /* static variables are not on the stack */
+    char envvar[512];
+    ...
+
+    sprintf(envvar, "HTTP_%s", buf);
+see exploit code 'exploit-1a.py'
+
+[http.c:282]
+the 'pn' variable can be overwritten by the 'name' variable because function strcat is unsafe.
+code:
+    void http_serve(int fd, const char *name){
+        ...
+        char pn[1024];
+        strcat(pn,name);
+
+[http.c:344]
+the 'dst' variable can be overwritten by the 'dirname' variable because 'dst' variable is only 1024bytes but the function strcpy is unsafe.
+code:
+    void dir_join(char *dst, const char *dirname, const char *filename) {
+        strcpy(dst, dirname);
+        ...
+    }
+    
+    called by
+    void http_serve_directory(int fd,const char *pn){
+        char name[1024];
+        ...
+        dir_join(name,pn,indices[i]);
+        ...
+        dir_join(name,getenv("SCRIPT_NAME",indices[i]));
+
+[http.c:437]
+the 'dst' variable can be overwritten by the 'src' variable because 'src' may be longer than 'dst', for example, in http.c:159
+code:
+    void url_decode(char *dst, const char *src){
+        ...
+        dst++;
+        ...
+    }
+
+[http.c:]

@@ -1,1 +1,16 @@
 ## Place your answers here.
+exploit-2a.py
+trigger bug on http.c:65 with the function process_client(int fd),
+the return address of function process_client can be overwritten by buffer overflow of variable repath[2048]
+
+exploit-2b.py
+overwrite function pointer *handler by pypass a huge value to pn[1024]
+$./clean-env.sh ./zookld zook-exstack.conf&
+$gdb -p $(pgrep zookfs-exstack)
+$break point
+$./exploit-2b.py localhost 8080
+we can find that the function pointer has been altered.
+
+exploit-3.py
+The buffer overflow can be used in this part,
+we firt push the executable code of Unlink into stack and modify the return address of function process_client() to point to the executable code in the stack.

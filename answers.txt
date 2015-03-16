@@ -11,8 +11,16 @@ $break point
 $./exploit-2b.py localhost 8080
 we can find that the function pointer has been altered.
 
+Part 2:
 exploit-3.py
 The buffer overflow can be used in this part,
 we firt push the executable code of Unlink into stack 
 and modify the return address of function process_client() 
 to point to the executable code in the stack.
+
+Part 3: 
+exploit-4a.py
+The return address of process_client can be overwritten and altered to 
+point to the system function unlink.
+exploit-4b.py
+The value of function pointer of *handler can be overwritten.

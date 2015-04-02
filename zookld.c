@@ -168,6 +168,24 @@ pid_t launch_svc(CONF *conf, const char *name)
     if ((dir = NCONF_get_string(conf, name, "dir")))
     {
         /* chroot into dir */
+        // change the root path, use para path as the new root path
+        if(chroot(dir))
+        {
+            perror("chroot");
+            return 1;
+        }
+
+        // change the current working path to "/"
+        if(chdir("/"))
+        {
+            perror("chdir");
+            return 1;
+        }
+
+        setresgid(gid,gid,gid); // set the real, effective, saved group id of the calling process
+        //setresuid(uid,uid,uid); // set the real, effecitve, saved user id of the calling process
+        setgroups(ngids,gids);  // set the supplementary group IDs of the calling process in list
+        setresuid(uid,uid,uid); // set the real, effecitve, saved user id of the calling process
     }
 
     signal(SIGCHLD, SIG_DFL);

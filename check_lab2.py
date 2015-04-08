@@ -263,7 +263,7 @@ def check_ex5():
                        "cred", ['password', 'token'])
 
     if check_0 and check_ex5_1() and check_ex5_2():
-        log(green("PASS"), "Exercise 7")
+        log(green("PASS"), "Exercise 5")
 
 def check_ex6():
     dbfile = "/jail/zoobar/db/cred/cred.db"

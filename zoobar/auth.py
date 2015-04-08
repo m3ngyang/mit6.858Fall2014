@@ -1,5 +1,7 @@
 from zoodb import *
 from debug import *
+from pbkdf2 import PBKDF2
+import os
 
 import hashlib
 import random
@@ -30,7 +32,8 @@ def login(username, password):
     cred = db.query(Cred).get(username)
     if not cred:
         return None
-    if cred.password == password:
+    key = PBKDF2(password, cred.salt).read(32)
+    if cred.password == key.encode('base-64'):
         return newtoken(db,cred)
     else:
         return None
@@ -55,7 +58,10 @@ def register(username, password):
     newcred = Cred()
     newperson.username = username
     newcred.username = username
-    newcred.password = password
+    salt = os.urandom(8)
+    newcred.salt = salt.encode('base-64')
+    key = PBKDF2(password, newcred.salt).read(32)
+    newcred.password = key.encode('base-64')
     persondb.add(newperson)
     creddb.add(newcred)
     persondb.commit()

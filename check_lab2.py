@@ -289,7 +289,7 @@ def check_ex7():
                        "bank", ['zoobars'])
 
     if check_0 and check_ex7_1():
-        log(green("PASS"), "Exercise 9")
+        log(green("PASS"), "Exercise 7")#original 9
 
 import z_client
 def check_ex0():

@@ -3,13 +3,13 @@ from zoodb import *
 import rpclib
 
 sockname = "/authsvc/sock"
-c = rpclib.client_connect(sockname);
 
 def login(username, password):
     ## Fill in code here.
     kwargs = {}
     kwargs['username'] = username
     kwargs['password'] = password
+    c = rpclib.client_connect(sockname);
     return c.call('login', **kwargs)
 
 def register(username, password):
@@ -17,6 +17,7 @@ def register(username, password):
     kwargs = {}
     kwargs['username'] = username
     kwargs['password'] = password
+    c = rpclib.client_connect(sockname);
     return c.call('register',**kwargs)
 
 def check_token(username, token):
@@ -24,4 +25,5 @@ def check_token(username, token):
     kwargs = {}
     kwargs['username'] = username
     kwargs['token'] = token
+    c = rpclib.client_connect(sockname);
     return c.call('check_token',**kwargs)

@@ -7,6 +7,7 @@ import sys
 import bank
 from debug import *
 from sqlalchemy.orm import class_mapper
+import auth_client
 
 def serialize(model):
     cols = [c.key for c in class_mapper(model.__class__).columns]
@@ -16,8 +17,12 @@ class BankRpcServer(rpclib.RpcServer):
     def rpc_setup(self, username):
         bank.setup(username)
 
-    def rpc_transfer(self, sender, recipient, zoobars):
-        return bank.transfer(sender, recipient, zoobars)
+    def rpc_transfer(self, sender, recipient, zoobars, token):
+        check = auth_client.check_token(sender, token)
+        if check:
+            return bank.transfer(sender, recipient, zoobars)
+        else:
+            raise ValueError()
 
     def rpc_balance(self, username):
         return bank.balance(username)

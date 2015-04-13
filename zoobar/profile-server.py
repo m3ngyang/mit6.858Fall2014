@@ -20,6 +20,8 @@ class ProfileAPIServer(rpclib.RpcServer):
     def __init__(self, user, visitor):
         self.user = user
         self.visitor = visitor
+        os.setuid(61016)
+        os.setgid(61012) # guid must be set, otherwise the api would still be run as root
 
     def rpc_get_self(self):
         return self.user

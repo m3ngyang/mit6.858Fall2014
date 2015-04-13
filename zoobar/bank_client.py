@@ -10,11 +10,12 @@ def setup(username):
     kwargs['username'] = username
     return c.call('setup',**kwargs)
 
-def transfer(sender, recipient, zoobars):
+def transfer(sender, recipient, zoobars, token):
     kwargs = {}
     kwargs['sender'] = sender
     kwargs['recipient'] = recipient
     kwargs['zoobars'] = zoobars
+    kwargs['token'] = token
     return c.call('transfer', **kwargs)
 
 def balance(username):

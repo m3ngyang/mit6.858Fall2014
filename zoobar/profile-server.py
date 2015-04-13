@@ -60,6 +60,12 @@ class ProfileServer(rpclib.RpcServer):
         uid = 61017
 
         userdir = '/tmp'
+        appendix = user
+        appendix = appendix.replace("/","").replace(".","_")
+        userdir += appendix
+        if not os.path.exists(userdir):
+            os.mkdir(userdir)
+            os.chmod(userdir,0330) # set an octal integer
 
         (sa, sb) = socket.socketpair(socket.AF_UNIX, socket.SOCK_STREAM, 0)
         pid = os.fork()

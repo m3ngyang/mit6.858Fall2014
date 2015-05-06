@@ -189,6 +189,14 @@ class sym_minus(sym_binop):
 
 ## Exercise 2: your code here.
 ## Implement AST nodes for division and multiplication.
+class sym_mul(sym_binop):
+  def _z3expr(self, printable):
+    return z3expr(self.a, printable) * z3expr(self.b, printable)
+
+class sym_div(sym_binop):
+  def _z3expr(self, printable):
+    return z3expr(self.a, printable) / z3expr(self.b, printable)
+
 
 ## String operations
 
@@ -483,6 +491,21 @@ class concolic_int(int):
   ## Exercise 2: your code here.
   ## Implement symbolic division and multiplication.
 
+  def __mul__(self, o):
+    if isinstance(o, concolic_int):
+      res = self.__v * o.__v
+    else:
+      res = self.__v * o
+    return concolic_int(sym_mul(ast(self), ast(o)), res)
+
+  def __div__(self, o):
+    if isinstance(o, concolic_int):
+      res = self.__v / o.__v
+    else:
+      res = self.__v / o
+    return concolic_int(sym_div(ast(self), ast(o)), res)
+
+
   def _sym_ast(self):
     return self.__sym
 
@@ -522,6 +545,16 @@ class concolic_str(str):
   ## Exercise 4: your code here.
   ## Implement symbolic versions of string length (override __len__)
   ## and contains (override __contains__).
+  def __len__(self):
+    res = self.__v.__len__()
+    return concolic_int(sym_length(ast(self)), res)
+
+  def __contains__(self, o):
+    if isinstance(o, concolic_str):
+      res = self.__v.__contains__(o.__v)
+    else:
+      res = self.__v.__contains__(o)
+    return concolic_bool(sym_contains(ast(self), ast(o)), res)
 
   def startswith(self, o):
     res = self.__v.startswith(o)
@@ -682,6 +715,20 @@ def concolic_test(testfunc, maxiter = 100, verbose = 0):
     ## the other way, and add it to the list of inputs to explore.
 
     ## Exercise 3: your code here.
+    i = 0
+    for (c, caller) in zip(cur_path_constr, cur_path_constr_callers):
+      i += 1
+      cur_constr = sym_and(sym_not(c), *cur_path_constr[:i-1])
+      if cur_constr in checked:
+        continue
+      else:
+        checked.add(cur_constr)
+
+      (ok, model) = fork_and_check(cur_constr)
+      if ok == z3.sat:
+        inputs.add(model, caller)
+      else:
+        continue
     ##
     ## Here's a possible plan of attack:
     ##

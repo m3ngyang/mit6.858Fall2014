@@ -36,6 +36,7 @@ def test_stuff():
   pdb.query(zoobar.zoodb.Person).delete()
   adduser(pdb, 'alice', 'atok')
   adduser(pdb, 'bob', 'btok')
+  count1 = len(pdb.query(zoobar.zoodb.Person).all())
   balance1 = sum([p.zoobars for p in pdb.query(zoobar.zoodb.Person).all()])
   pdb.commit()
 
@@ -79,9 +80,18 @@ def test_stuff():
 
   ## Detect balance mismatch.
   ## When detected, call report_balance_mismatch()
+  count2 = len(pdb.query(zoobar.zoodb.Person).all())
+  balance2 = sum([p.zoobars for p in pdb.query(zoobar.zoodb.Person).all()])
+  if count1==count2 and balance1 != balance2:
+      report_balance_mismatch()
+
 
   ## Detect zoobar theft.
   ## When detected, call report_zoobar_theft()
+  # how to ensure that a user does not issue any request?
+  for p in pdb.query(zoobar.zoodb.Person).all():
+    if p.zoobars != 10:
+      report_zoobar_theft()
 
 fuzzy.concolic_test(test_stuff, maxiter=2000, verbose=1)
 

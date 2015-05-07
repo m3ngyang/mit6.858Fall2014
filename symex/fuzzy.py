@@ -719,6 +719,8 @@ def concolic_test(testfunc, maxiter = 100, verbose = 0):
     for (c, caller) in zip(cur_path_constr, cur_path_constr_callers):
       i += 1
       cur_constr = sym_and(sym_not(c), *cur_path_constr[:i-1])
+      # print 'my test-', i, ':', cur_constr
+      # print 'caller:', caller
       if cur_constr in checked:
         continue
       else:

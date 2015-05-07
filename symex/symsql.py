@@ -13,7 +13,9 @@ def newget(query, primary_key):
   ##
   ## Hint: given a SQLalchemy row object r, you can find the name of
   ## its primary key using r.__table__.primary_key.columns.keys()[0]
+  print "QUERY:",query
   allRecords = query.all()
+  print "RECORDS:",allRecords
   for record in allRecords:
     primary_key_name = record.__table__.primary_key.columns.keys()[0]
     if primary_key == getattr(record, primary_key_name):

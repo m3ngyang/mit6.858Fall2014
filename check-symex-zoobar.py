@@ -88,9 +88,15 @@ def test_stuff():
 
   ## Detect zoobar theft.
   ## When detected, call report_zoobar_theft()
-  # how to ensure that a user does not issue any request?
-  for p in pdb.query(zoobar.zoodb.Person).all():
-    if p.zoobars != 10:
+  # senders = [rec.sender for rec in tdb.query(zoobar.zoodb.Transfer).all()]
+  #print "SENER:",senders
+  #for p in pdb.query(zoobar.zoodb.Person).all():
+  #  print "Person:", p
+  #  if p not in senders and p.zoobars < 10:
+  #    report_zoobar_theft()
+  t = tdb.query(zoobar.zoodb.Transfer).filter(zoobar.zoodb.Transfer.sender=="bob").first()
+  b = pdb.query(zoobar.zoodb.Person).filter(zoobar.zoodb.Person.username=="bob").first()
+  if t is None and b.zoobars < 10:
       report_zoobar_theft()
 
 fuzzy.concolic_test(test_stuff, maxiter=2000, verbose=1)
